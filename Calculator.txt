@@ -1,0 +1,97 @@
+#Calculator
+
+from tkinter import *
+from tkinter import messagebox
+
+
+wn=Tk()
+wn.title("Calculator")
+wn.geometry("315x450+500+50")
+wn.iconphoto(False, PhotoImage(file="c1.png"))
+wn.configure(bg="black")
+f1=("Arial",25,"bold")
+
+
+
+def show(value) :
+	re_ent.insert(END,value)
+
+def clear() :
+	re_ent.delete(0,END)
+	
+def disable_keyboard_input(event):
+	return "break"
+
+def calculate() :
+	try :
+		expression=re_ent.get()
+		result=eval(expression)
+		ans=round(result,2)
+		re_ent.delete(0,END)
+		re_ent.insert(0,ans)
+	except SyntaxError :
+		messagebox.showinfo("ERROR","INVALID INPUT")
+		re_ent.delete(0,END)
+re_ent=Entry(wn,text="",font=f1,width=50,fg="black")
+re_ent.place(x=0,y=20)
+
+re_ent.bind("<Key>", disable_keyboard_input)
+
+btn1=Button(wn,font=f1,width=3,text="C",height=1,fg="#b5520b",bg="orange",command=clear)
+btn1.place(x=10,y=80)
+
+btn2=Button(wn,font=f1,command=lambda:show("%"),text="%",width=3,height=1,fg="#b5520b") 
+btn2.place(x=85,y=80)
+
+btn3=Button(wn,font=f1,command=lambda:show("/"),text="/",width=3,height=1,fg="#b5520b") 
+btn3.place(x=160,y=80)
+
+btn4=Button(wn,font=f1,command=lambda :show("*"),text="*",width=3,height=1,fg="#b5520b") 
+btn4.place(x=235,y=80)
+
+btn5=Button(wn,font=f1,command=lambda:show("7"),text="7",width=3,height=1,fg="#b5520b") 
+btn5.place(x=10,y=155)
+
+btn6=Button(wn,font=f1,command=lambda:show("8"),text="8",width=3,height=1,fg="#b5520b") 
+btn6.place(x=85,y=155)
+
+btn7=Button(wn,font=f1,command=lambda:show("9"),text="9",width=3,height=1,fg="#b5520b") 
+btn7.place(x=160,y=155)
+
+btn8=Button(wn,font=f1,command=lambda:show("+"),text="+",width=3,height=1,fg="#b5520b") 
+btn8.place(x=235,y=155)
+
+btn9=Button(wn,font=f1,command=lambda:show("4"),text="4",width=3,height=1,fg="#b5520b") 
+btn9.place(x=10,y=230)
+
+btn10=Button(wn,font=f1,command=lambda:show("5"),text="5",width=3,height=1,fg="#b5520b") 
+btn10.place(x=85,y=230)
+
+btn11=Button(wn,font=f1,command=lambda:show("6"),text="6",width=3,height=1,fg="#b5520b") 
+btn11.place(x=160,y=230)
+
+btn12=Button(wn,font=f1,command=lambda:show("-"),text="-",width=3,height=1,fg="#b5520b") 
+btn12.place(x=235,y=230)
+
+
+btn14=Button(wn,font=f1,command=lambda:show("1"),text="1",width=3,height=1,fg="#b5520b") 
+btn14.place(x=10,y=305)
+
+btn15=Button(wn,font=f1,command=lambda:show("2"),text="2",width=3,height=1,fg="#b5520b") 
+btn15.place(x=85,y=305)
+
+btn16=Button(wn,font=f1,command=lambda:show("3"),text="3",width=3,height=1,fg="#b5520b") 
+btn16.place(x=160,y=305)
+
+btn17=Button(wn,font=f1,command=lambda:show("0"),text="0",width=3,height=1,fg="#b5520b") 
+btn17.place(x=235,y=305)
+
+
+btn18=Button(wn,font=f1,command=lambda:show("."),text=".",width=3,height=1,fg="#b5520b") 
+btn18.place(x=10,y=380)
+
+btn19=Button(wn,font=f1,text="=",width=11,height=1,bg="green",command=calculate) 
+btn19.place(x=85,y=380)
+
+
+wn.mainloop()  

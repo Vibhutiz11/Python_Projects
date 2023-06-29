@@ -1,0 +1,680 @@
+from tkinter import *
+from tkinter.scrolledtext import *
+from tkinter.messagebox import *
+from sqlite3 import *
+#from PIL import ImageTk,Image
+import tkinter as tk
+from tkinter import messagebox
+import matplotlib.pyplot as plt
+import pyrebase
+from datetime import *
+import re
+
+
+
+splash_scr=Tk()
+splash_scr.title("Splash Screen")
+splash_scr.geometry("750x600+400+80")
+splash_scr.iconphoto(True, tk.PhotoImage(file="P3.png"))
+
+vg=PhotoImage(file="s1.png")
+my_label1 = Label(splash_scr, image=vg)
+my_label1.place(x= 0, y=0, relwidth=1,relheight=1)
+
+
+
+def splash() :
+	
+	
+	f=("Arial" , 25, "bold")
+	f1=("Stylus BT",40,"bold")
+	f2=("Arial",20,"bold")
+	f3=("Arial",25,"")
+	
+	def s2() :
+		mw.withdraw()
+		aw.deiconify()
+	def s3() :
+		mw.withdraw()
+		vw.deiconify()
+		vw_st_data.delete(1.0,END)
+		con=None
+
+#1
+		try :
+			vw_st_data.delete(1.0,END)
+			vw_st_sales.delete(1.0,END)
+			vw_st_fin.delete(1.0,END)	
+			vw_st_acc.delete(1.0,END)
+			vw_st_hr.delete(1.0,END)
+
+
+			con=connect("ss.db")
+			cursor = con.cursor()
+			sql="select id,name,salary from emp where dept = 'MANAGER' "
+			cursor.execute(sql)
+			data = cursor.fetchall()
+			info = ""
+			for d in data :
+				info= info +"\n" + "ID : " +str(d[0])  + "\n"  + "NAME :  " +str(d[1]) + "\n" + "SALARY : " + str(d[2]) + "\n" 
+			vw_st_data.insert(INSERT, info)
+
+	
+			sql1="select id,name,salary from emp where dept = 'FINANCE' "
+			cursor.execute(sql1)
+			data1 = cursor.fetchall()
+			info = ""
+			for d in data1 :
+				info= info +"\n" + "ID : " +str(d[0])  + "\n"  + "NAME :  " +str(d[1]) + "\n" + "SALARY : " + str(d[2]) + "\n" 
+			vw_st_fin.insert(INSERT, info)
+			
+			
+			sql2="select id,name,salary from emp where dept = 'SALES' "
+			cursor.execute(sql2)
+			data2 = cursor.fetchall()
+			info = ""
+			for d in data2 :
+				info= info +"\n" + "ID : " +str(d[0])  + "\n"  + "NAME :  " +str(d[1]) + "\n" + "SALARY : " + str(d[2]) + "\n" 
+			vw_st_sales.insert(INSERT, info)
+
+			sql3="select id,name,salary from emp where dept = 'ACCOUNTING' "
+			cursor.execute(sql3)
+			data3 = cursor.fetchall()
+			info = ""
+			for d in data3 :
+				info= info +"\n" + "ID : " +str(d[0])  + "\n"  + "NAME :  " +str(d[1]) + "\n" + "SALARY : " + str(d[2]) + "\n" 
+			vw_st_acc.insert(INSERT, info)
+
+			sql4="select id,name,salary from emp where dept = 'HR' "
+			cursor.execute(sql4)
+			data4 = cursor.fetchall()
+			info = ""
+			for d in data4 :
+				info= info +"\n" + "ID : " +str(d[0])  + "\n"  + "NAME :  " +str(d[1]) + "\n" + "SALARY : " + str(d[2]) + "\n" 
+			vw_st_hr.insert(INSERT, info)
+
+		except Exception as e :
+			showerror("ISSUE",e)
+		
+		finally :
+			if con is not None :
+				con.close()
+	
+	def s5() :
+		#txt=messagebox.askquestion("CONFIRM","DO YOU REALLY WANNA UPDATE?")
+		#if txt == "yes" :
+		mw.withdraw()
+		updw.deiconify()
+
+	def s7() :
+	#	txt=messagebox.askquestion("CONFIRM","DO YOU REALLY WANNA DELETE?")
+	#	print(txt)	
+	#	if txt == "yes" :
+		mw.withdraw()
+		delw.deiconify()
+
+	def chart() :
+		mw.withdraw()
+		chartw.deiconify()
+	
+	
+	def ch1() :
+		con=connect("ss.db")
+		cursor=con.cursor()
+		
+		sql="SELECT dept, COUNT(*)  FROM emp GROUP BY dept"
+		cursor.execute(sql)
+		results = cursor.fetchall()
+		
+		departments = [row[0] for row in results]
+		num_employees = [row[1] for row in results]
+
+		#x = range(len(departments))
+
+		plt.bar(departments, num_employees, width=0.5,color=["green"])
+		plt.xlabel('Department')
+		plt.ylabel('Number of Employees')
+		plt.title('Number of Employees in Each Department')
+		plt.tight_layout()
+		plt.show()
+		
+		con.close()
+
+	def ch2() :
+			
+		con=connect("ss.db")
+		cursor=con.cursor()
+		
+		sql="SELECT name, salary FROM emp ORDER BY salary DESC LIMIT 5"
+		cursor.execute(sql)
+		results = cursor.fetchall()
+		print(results)
+		
+		names = [row[0] for row in results]
+		salaries = [row[1] for row in results]
+
+		#x = range(len(departments))
+
+		plt.bar(names, salaries,width=0.5,color=["yellow", "red"])
+		plt.xlabel('Employee Name')
+		plt.ylabel('Salary')
+		plt.title('Top 5 Highest-Earning Salaried Employees')
+		plt.xticks(rotation=45)
+
+											
+		plt.show()
+		
+		con.close()
+
+
+###################
+
+	splash_scr.destroy()
+	lw=Tk()	
+	lw.title("LOGIN")
+	lw.geometry("750x600+400+80")
+	lw.iconphoto(True, tk.PhotoImage(file="P3.png"))
+	
+	jg=PhotoImage(file="P1.png")
+	my_label1 = Label(lw, image=jg)
+	my_label1.place(x=0, y=0, relwidth=1,relheight=1)
+
+
+	canvas=Canvas(lw)
+	canvas.create_image(0, 0, image=jg, anchor=NW)
+#	canvas.create_text(300,70, text="ADD EMPLOYEE", fill="brown", font=f1)
+	canvas.create_text(250,250, text="Email ID", fill="black", font=f2)
+	canvas.create_text(250,350, text="Password", fill="black", font=f2)
+#	canvas.create_text(100,340, text="Enter Salary", fill="brown", font=f2)
+	#canvas.create_text(200,420, text="Confirm Password", fill="brown", font=f2)
+
+	canvas.pack(fill="both", expand=True)
+
+	#lab_id = Label(aw, text= "Enter ID", font= f3)
+	ent_mail = Entry(lw, font=f3,width=19)
+	#lab_name = Label(aw, text= "Enter Name", font= f)
+	ent_pass = Entry(lw,show="*", font=f3,width=19)
+	#lab_sal = Label(aw, text= "Enter Salary", font= f)
+#	ent_sal = Entry(aw, font=f3,width=19)
+
+
+	def login() :
+		#if ent_mail.get() == "admin11@gmail.com" and ent_pass.get() == "admin" :
+		lw.withdraw()
+		mw.deiconify()
+#		else :
+#			messagebox.showerror("ERROR","INVALID INPUT")
+
+	
+	btn_1_lw=Button(lw,text="Continue",font=f,command=login)
+	btn_1_lw.place(x=350,y=440)
+
+	#lab_	id.place(x=350,y=180)
+	ent_mail.place(x=350,y=230)
+	#lab_name.pack(pady=10)
+	ent_pass.place(x=350,y=330)
+	
+
+
+
+#####################################
+
+
+
+	mw=Toplevel(lw)
+	mw.geometry("750x600+400+80")
+	
+
+	cg=PhotoImage(file="P5.png")
+	my_label1 = Label(mw, image=cg)
+	my_label1.place(x= 0, y=0, relwidth=1,relheight=1)
+
+	but_add=Button(mw, text ="Add", font=f,width= 8, command=s2)
+	but_view=Button(mw, text ="View", font=f,width= 8, command=s3)
+	but_upd=Button(mw, text ="Update", font=f,width= 8,command=s5)
+	but_del=Button(mw, text ="Delete", font=f,width= 8,command=s7)
+	but_chart=Button(mw, text ="Charts", font=f,width= 8,command=chart)
+
+	but_add.place(x=300,y=50)
+	but_view.place(x=300,y=150)
+	but_upd.place(x=300,y=250)
+	but_del.place(x=300,y=350)
+	but_chart.place(x=300,y=450)
+
+	#def l1() :
+	#	mw.withdraw()
+	#	lw.deiconify()
+	
+	#btn_mw=Button(mw,text="BACK",font=f,command=l1)
+	#btn_mw.place(x=420,y=550)
+	mw.withdraw()
+
+######################### 
+	chartw=Toplevel(lw)
+	chartw.geometry("750x600+400+80")
+	chartw.configure(bg="aqua")
+
+	def sch() :
+		chartw.withdraw()
+		mw.deiconify()
+
+
+	btn_chartw=Button(chartw,text="BACK",font=f2,command=sch,fg="green")
+	btn_chartw.place(x=330,y=510)
+
+
+	btn_chartw1=Button(chartw,text="Top 5 Salaried",font=f2,command=ch2)
+	btn_chartw1.place(x=250,y=150)
+	
+	btn_chartw2=Button(chartw,text="No. of emp departmentwise",font=f2,command=ch1)
+	btn_chartw2.place(x=200,y=250)
+
+	chartw.withdraw()
+###########################
+
+	aw=Toplevel(lw)
+	#aw.title("ADD STUDENT")
+	aw.geometry("750x600+400+80")
+
+	eg=PhotoImage(file="P21.png")
+	my_label1 = Label(aw, image=eg)
+	my_label1.place(x=0, y=0, relwidth=1,relheight=1)
+
+
+	canvas=Canvas(aw)
+	canvas.create_image(0, 0, image=eg, anchor=NW)
+	#canvas.create_text(300,70, text="ADD EMPLOYEE", fill="brown", font=f1)
+	canvas.create_text(100,70, text="Enter ID", fill="brown", font=f2)
+	canvas.create_text(100,170, text="Enter Name", fill="brown", font=f2)
+	canvas.create_text(100,270, text="Enter Salary", fill="brown", font=f2)
+	canvas.create_text(100,370, text="Dept", fill="brown", font=f2)
+	canvas.create_text(100,470, text="MOW", fill="brown", font=f2)
+
+	canvas.pack(fill="both", expand=True)
+
+	#lab_id = Label(aw, text= "Enter ID", font= f3)
+	ent_id = Entry(aw, font=f3,width=19)
+	#lab_name = Label(aw, text= "Enter Name", font= f)
+	ent_name = Entry(aw, font=f3,width=19)
+	#lab_sal = Label(aw, text= "Enter Salary", font= f)
+	ent_sal = Entry(aw, font=f3,width=19)
+	ent_dept = Entry(aw, font=f3,width=19)
+	
+	r=IntVar()
+	r.set(1)
+	r1=Radiobutton(aw,text="Onsite",variable=r,value=1,font=f3,bg="snow")
+	r1.place(x=160,y=450)
+	r2=Radiobutton(aw,text="Remote",variable=r,value=2,font=f3,bg="snow")
+	r2.place(x=310,y=450)
+	r3=Radiobutton(aw,text="Hybrid",variable=r,value=3,font=f3,bg="snow")
+	r3.place(x=470,y=450)
+
+	#lab_	id.place(x=350,y=180)
+	ent_id.place(x=200,y=50)
+	#lab_name.pack(pady=10)
+	ent_name.place(x=200,y=150)
+	#lab_sal.pack(pady=10)
+	ent_sal.place(x=200,y=250)
+	ent_dept.place(x=200,y=350)
+
+
+	def s1() :
+		aw.withdraw()
+		mw.deiconify()
+
+	btn_aw=Button(aw,text="BACK",font=f2,command=s1)
+	btn_aw.place(x=330,y=530)
+
+	def add() :
+		try :
+			id=int(ent_id.get())
+			name=ent_name.get()
+			sal=int(ent_sal.get())
+			dept=ent_dept.get().upper()
+			pattern = r'^\d'
+			print(dept)
+			mov=""
+			
+			if r.get() == 3 :
+				mov= "hybrid"
+			elif r.get() == 2 :
+				mov= "remote"
+			else :
+				mov = "onsite"
+		
+			if ent_id.get() == "" or ent_name.get() == "" or ent_sal.get() == "" or ent_dept.get()== ""  :
+				messagebox.showerror("ALERT","All Fields are required")
+			elif len(name) < 2 :
+				messagebox.showerror("ALERT","PLEASE VERIFY NAME")
+			elif sal < 8000  :
+				messagebox.showerror("ALERT","SALARY CANNOT BE LESS THAN 8000")
+			elif  not re.match("^[a-zA-Z]+$", name): 
+				messagebox.showerror("ALERT","Enter Name Properly")
+			elif dept != "MANAGER" and dept != "HR" and dept != "FINANCE" and dept != "SALES" and dept != "ACCOUNTING" :
+				messagebox.showerror("ALERT","Department not present")
+			else :
+				con=None
+				try :
+
+					firebaseConfig = {
+					"apiKey": "AIzaSyDdBVnb5n8IQtVylP1tMdtdOtGe6ZLaCvE",
+					"authDomain": "employee-9abbe.firebaseapp.com",
+					"databaseURL": "https://employee-9abbe-default-rtdb.firebaseio.com",
+					"projectId": "employee-9abbe",
+					"storageBucket": "employee-9abbe.appspot.com",
+					"messagingSenderId": "950813369915",
+					"appId": "1:950813369915:web:8fdffb4773d219afe55e1e"	
+					}
+		
+					fb = pyrebase.initialize_app(firebaseConfig)
+					db = fb.database()
+					print(db)
+				
+					idf=int(ent_id.get())
+					namef=ent_name.get()
+					salf=int(ent_sal.get())	
+					deptf=ent_dept.get()
+							
+	
+					if idf == "" or namef == "" or salf == "" or deptf== ""  :
+						messagebox.showerror("ALERT","All Fields are required")
+ 	
+					movf=""
+					if r.get() == 3 :
+						movf= "hybrid"
+					elif r.get() == 2 :
+						movf= "remote"
+					else :
+						movf = "onsite"
+	
+					info = {"ID" :idf, "name" :namef, "dept" :deptf , "salary" :salf , "dt" : str(datetime.now()) }
+					db.child("employee").child(idf).set(info)
+			
+
+					con= connect("ss.db")
+					cursor = con.cursor()
+					sql="insert into emp values('%d', '%s', '%d', '%s', '%s')"
+					cursor.execute(sql % (id, name, sal, dept, mov))	
+					con.commit()
+					messagebox.showinfo("SUCCESS","EMPLOYEE ADDED")
+	
+					ent_id.delete(0,END)
+					ent_name.delete(0,END)
+					ent_sal.delete(0,END)
+					ent_dept.delete(0,END)
+					ent_id.focus()
+				except Exception as e :
+					messagebox.showerror("ISSUE", e)
+				finally :
+					if con is not None :
+						con.close()
+				
+		except ValueError :
+			messagebox.showerror("ALERT","Values are not proper")
+		except TypeError :
+			messagebox.showerror("ALERT","Values are not proper")
+
+	
+	btn_1_aw=Button(aw,text="SAVE",font=f2,command=add)
+	btn_1_aw.place(x=110,y=530)
+
+	aw.withdraw()	
+
+###############################
+
+	updw=Toplevel(lw)
+	#aw.title("ADD STUDENT")
+	updw.geometry("750x600+400+80")
+		
+	gg=PhotoImage(file="P21.png")
+	my_label1 = Label(updw, image=eg)
+	my_label1.place(x=0, y=0, relwidth=1,relheight=1)
+
+
+	canvas=Canvas(updw)
+	canvas.create_image(0, 0, image=gg, anchor=NW)
+	canvas.create_text(300,70, text="UPDATE EMPLOYEE", fill="brown", font=f1)
+	canvas.create_text(100,180, text="Enter ID", fill="brown", font=f2)
+	canvas.create_text(100,260, text="Enter Name", fill="brown", font=f2)
+	canvas.create_text(100,340, text="Enter Salary", fill="brown", font=f2)
+	#canvas.create_text(200,420, text="Confirm Password", fill="brown", font=f2)
+
+	canvas.pack(fill="both", expand=True)
+
+	#lab_id = Label(updw, text= "Enter ID", font= f3)
+	ent_upd_id = Entry(updw, font=f3,width=19)
+	#lab_name = Label(aw, text= "Enter Name", font= f)
+	ent_upd_name = Entry(updw, font=f3,width=19)
+	#lab_upd_sal = Label(aw, text= "Enter Salary", font= f)
+	ent__upd_sal = Entry(updw, font=f3,width=19)
+
+	def s4() :
+		updw.withdraw()
+		mw.deiconify()
+
+	btn_updw=Button(updw,text="BACK",font=f,command=s4)
+	btn_updw.place(x=350,y=400)
+
+	def upd() :
+		txt=messagebox.askquestion("CONFIRM","DO YOU REALLY WANNA DELETE?")
+		print(txt)	
+		if txt == "yes" :
+			con = None
+			con= connect("ss.db")
+			cursor = con.cursor()
+			sql="select id from emp"
+			cursor.execute(sql)	
+			data=cursor.fetchall()	
+			print(data)
+			con.commit()
+			id1=ent_upd_id.get()
+			name1=ent_upd_name.get()
+			sal1=ent__upd_sal.get()
+	
+			if ent_upd_id.get() == "" or ent_upd_name.get() == "" or ent__upd_sal.get() == "" :
+				messagebox.showerror("ALERT", "ALL FIELDS ARE REQUIRED")
+				ent_upd_id.delete(0,END)
+				ent_upd_name.delete(0,END)
+				ent__upd_sal.delete(0,END)	
+				ent_del_id.focus()
+			else :
+				try :
+
+					firebaseConfig = {
+					"apiKey": "AIzaSyDdBVnb5n8IQtVylP1tMdtdOtGe6ZLaCvE",
+					"authDomain": "employee-9abbe.firebaseapp.com",
+					"databaseURL": "https://employee-9abbe-default-rtdb.firebaseio.com",		
+					"projectId": "employee-9abbe",
+					"storageBucket": "employee-9abbe.appspot.com",
+					"messagingSenderId": "950813369915",
+					"appId": "1:950813369915:web:8fdffb4773d219afe55e1e"	
+					}
+					fb = pyrebase.initialize_app(firebaseConfig)
+					db = fb.database()		
+				
+					idf_str = ent_upd_id.get()
+					nameff=ent_upd_name.get()
+					salff_str=ent__upd_sal.get()
+		
+					if idf_str:
+						idf = int(idf_str)
+						salff = int(ent__upd_sal.get())
+						info = {"ID": idf, "name": nameff, "salary": salff, "dt": str(datetime.now())}
+						db.child("employee").child(idf).update(info)
+					else:
+						messagebox.showerror("ALERT", "ID field cannot be empty")
+					con=connect("ss.db")
+					cursor = con.cursor()
+					sql = "UPDATE emp SET name = ? , salary = ? WHERE id = ?;"
+					cursor.execute(sql, (name1, sal1, id1))
+					print(sql)
+					con.commit()
+					messagebox.showinfo("SUCCESS", "EMPLOYEE UPDATED SUCCESSFULLY :)")
+					ent_upd_id.delete(0,END)
+					ent_upd_name.delete(0,END)
+					ent__upd_sal.delete(0,END)
+		
+				except Exception as e :
+					messagebox.showerror("ISSUE",e)
+					ent_upd_id.delete(0,END)
+					ent_upd_name.delete(0,END)
+					ent__upd_sal.delete(0,END)
+					ent_del_id.focus()
+				finally :
+					if con is not None :
+						con.close()
+
+		
+	
+		
+
+	btn_1_updw=Button(updw,text="SAVE",font=f,command=upd)
+	btn_1_updw.place(x=120,y=400)
+	
+	#lab_id.place(x=350,y=180)
+	ent_upd_id.place(x=200,y=160)
+	#lab_name.pack(pady=10)
+	ent_upd_name.place(x=200,y=240)
+	#lab_sal.pack(pady=10)
+	ent__upd_sal.place(x=200,y=320)
+
+	updw.withdraw()	
+
+
+###############################
+
+	vw=Toplevel(lw)
+	vw.title("View Student")
+	vw.geometry("1050x700+350+50")
+	#vw.configure(bg="")
+
+
+	f8=("Times New Roman",20,"")
+	f9=("Times New Roman",25,"")
+	vw_st_data = ScrolledText(vw, width=17, height=8, font=f9)
+	vw_st_data.place(x=5,y=10)
+	st_lab=Label(vw,text="MANAGER",font=f8)
+	st_lab.place(x=50,y=12)
+
+	vw_st_fin = ScrolledText(vw, width=17, height=8, font=f9)
+	vw_st_fin.place(x=350,y=10)
+	st_labfin=Label(vw,text="FINANCE",font=f8)
+	st_labfin.place(x=360,y=12)
+
+	vw_st_sales = ScrolledText(vw, width=17, height=8, font=f9)
+	vw_st_sales.place(x=695,y=10)
+	st_labsales=Label(vw,text="SALES",font=f8)
+	st_labsales.place(x=720,y=12)
+
+	vw_st_acc = ScrolledText(vw, width=17, height=8, font=f9)
+	vw_st_acc.place(x=5,y=350)
+	st_labacc=Label(vw,text="ACCOUNTING",font=f8)
+	st_labacc.place(x=60,y=355)
+
+	vw_st_hr = ScrolledText(vw, width=17, height=8, font=f9)
+	vw_st_hr.place(x=350,y=350)
+	st_labhr=Label(vw,text="HR",font=f8)
+	st_labhr.place(x=450,y=355)
+
+
+	def s2() :
+		vw.withdraw()
+		mw.deiconify()
+
+	vw_btn_back = Button(vw, text="Back", font=f,command=s2,fg="green")
+	
+	vw_btn_back.place(x=730,y=430)
+
+	#def s12() :
+	#	vw.withdraw()
+
+	#vw_btn_dept = Button(vw, text="DEPARTMENT WISE Emp", font=f,command=s12)		
+	#vw_btn_dept.place(x=300,y=500)
+
+	vw.withdraw()
+
+#################################
+
+	delw=Toplevel(lw)
+	delw.geometry("750x600+400+80")
+
+	hg=PhotoImage(file="P21.png")
+	my_label1 = Label(delw, image=hg)
+	my_label1.place(x=0, y=0, relwidth=1,relheight=1)
+
+
+	canvas=Canvas(delw)
+	canvas.create_image(0, 0, image=hg, anchor=NW)
+	canvas.create_text(300,70, text="DELETE EMPLOYEE", fill="brown", font=f1)
+	canvas.create_text(100,180, text="Enter ID", fill="brown", font=f2)
+
+	canvas.pack(fill="both", expand=True)
+
+	ent_del_id = Entry(delw, font=f3,width=19)
+	ent_del_id.place(x=200,y=160)	
+
+
+	def s6() :
+		delw.withdraw()
+		mw.deiconify()
+
+	btn_delw=Button(delw,text="BACK",font=f,command=s6)
+	btn_delw.place(x=350,y=450)
+	
+	def delete() :
+		a=(ent_del_id.get())
+		if ent_del_id.get() == "" :
+			messagebox.showerror("ALERT", "PLEASE ENTER ID")
+		else :
+			con =None
+			try :
+						
+				firebaseConfig = {
+				"apiKey": "AIzaSyDdBVnb5n8IQtVylP1tMdtdOtGe6ZLaCvE",
+				"authDomain": "employee-9abbe.firebaseapp.com",
+				"databaseURL": "https://employee-9abbe-default-rtdb.firebaseio.com",		
+				"projectId": "employee-9abbe",
+				"storageBucket": "employee-9abbe.appspot.com",
+				"messagingSenderId": "950813369915",
+				"appId": "1:950813369915:web:8fdffb4773d219afe55e1e"	
+				}
+				fb = pyrebase.initialize_app(firebaseConfig)
+				db = fb.database()
+
+				idf = int(ent_del_id.get())
+				db.child("employee").child(idf).remove()
+				
+
+				con=connect("ss.db")
+				cursor = con.cursor()
+				sql = "DELETE FROM emp WHERE id = ?"
+				cursor.execute(sql, (a, ))
+				print(sql)
+				con.commit()
+				messagebox.showinfo("SUCCESS", "EMPLOYEE DELETED SUCCESSFULLY :)")
+				ent_del_id.delete(0,END)
+			
+		
+			except Exception as e :
+				messagebox.showerror("ISSUE","INVALID INPUT")
+				ent_del_id.delete(0,END)
+				ent_del_id.focus()
+			finally :
+				if con is not None :
+					con.close()
+	btn_1_delw=Button(delw,text="DELETE",font=f,command=delete)
+	btn_1_delw.place(x=300,y=280)
+
+
+	delw.withdraw()	
+
+
+
+
+##################################
+
+	lw.mainloop()
+
+
+splash_scr.after(2000, splash)
+mainloop()

@@ -1,0 +1,280 @@
+#Digital clock
+
+from tkinter import *
+import tkinter as tk
+from datetime import *
+import time as tt
+from tkinter import messagebox
+from PIL import ImageTk,Image
+from datetime import datetime
+import pytz
+from time import sleep
+
+
+uw=Tk()
+uw.title("DIGITAL CLOCK")
+uw.iconphoto(True, tk.PhotoImage(file="dc.png"))
+uw.geometry("600x600+550+50")
+cg=PhotoImage(file="C:\Pimages\hg3.png")
+my_label1 = Label(uw, image=cg)
+my_label1.place(x= 0, y=0, relwidth=1,relheight=1)
+
+
+def s1() :
+	uw.withdraw()
+	opw.deiconify()
+def s2() :
+	opw.withdraw()
+	uw.deiconify()
+def s3() :
+	opw.withdraw()
+	stpw.deiconify()
+def s4() :
+	opw.withdraw()
+	ctdw.deiconify()
+def s5() :
+	opw.withdraw()
+	wcw.deiconify()
+def s6() :
+	stpw.withdraw()
+	opw.deiconify()
+	global sec, mn, hr, stp
+	sec = 0
+	mn = 0
+	hr = 0
+	stp = 0
+	lbl.config(text='0:0:0')
+	
+def s7() :
+	
+	ctdw.withdraw()
+	opw.deiconify()
+
+def s8() :
+	wcw.withdraw()
+	opw.deiconify()
+def time() :
+	now = datetime.now()
+	tday=now.strftime("%A")
+	ct1 = now.strftime("%H")
+	ct2 = now.strftime("%M")
+	ct3 = now.strftime("%S")
+	ct4 = now.strftime("%p")
+	#hour,min,sec, am/pm
+	lblh.config(text=ct1)
+	lblm.config(text=ct2)
+	lbls.config(text=ct3)
+	lblp.config(text=ct4)
+	td.config(text=tday)
+	lblh.after(1000,time)
+
+sec=0;mn=0;hr=0;stp=0
+f2=("Times New Roman",40,"bold")
+
+
+def start() :
+	global sec,mn,hr,stp
+#	stp = 0
+#	while stp == 0:
+	sec = sec + 1
+	
+	if(sec==60) :
+		mn=mn+1
+		sec=0
+	if (mn==60) :
+		hr=hr+1
+		mn=0
+	lbl.config(text=str(hr) + ":" + str(mn) + ":" + str(sec))
+	if stp == 0:
+		uw.after(1000, start)
+
+def stop() :
+	global stp
+	stp=1
+	
+
+def reset() :
+	global sec, mn, hr, stp
+	sec = 0
+	mn = 0
+	hr = 0
+	lbl.config(text="0:0:0")
+	stp = 0
+	
+
+
+
+f1=("Times New Roman",25,"bold")
+lblh=Label(uw,font=f1,bg="light blue",width=2)
+lblh.place(x=80,y=265)
+l1=Label(uw,text=":",font=f1)
+l1.place(x=130,y=265)
+
+lblm=Label(uw,font=f1,bg="light blue",width=2)
+lblm.place(x=150,y=265)
+l22=Label(uw,text=":",font=f1)
+l22.place(x=200,y=265)
+
+lbls=Label(uw,font=f1,bg="light blue",width=2)
+lbls.place(x=220,y=265)
+
+lblp=Label(uw,font=f1,bg="orange",width=3)
+lblp.place(x=280,y=265)
+
+
+lbl2=Label(uw,text="Hello User,",font=f1)
+lbl2.place(x=50,y=80)
+lbl3=Label(uw,text="Current Time :",font=f1)
+lbl3.place(x=50,y=200)
+
+a1=Label(uw,text="Today is,",font=f1,width=10)
+a1.place(x=50,y=350)
+
+td=Label(uw,font=f1,bg="light blue",width=10)
+td.place(x=90,y=415)
+
+f6=("Calibri",20,"")
+morebtn=Button(uw,text="More...",font=f6,bg="light green",width=6,command=s1)
+morebtn.place(x=400,y=530)
+
+##############################
+
+opw=Toplevel(uw)
+opw.geometry("600x600+550+50")
+opw.configure(bg="aqua")
+oplbl1=Button(opw,text="Stop Watch",font=f1,width=10,command=s3)
+oplbl1.place(x=200,y=100)
+opw2=Button(opw,text="Countdown",font=f1,width=10,command=s4)
+opw2.place(x=200,y=220)
+opw2=Button(opw,text="World Clock",font=f1,width=10,command=s5)
+opw2.place(x=200,y=340)
+
+opwb=Button(opw,text="Back",font=f1,width=5,command=s2)
+opwb.place(x=350,y=500)
+opw.withdraw()
+
+stpw=Toplevel(uw)
+stpw.geometry("600x600+550+50")
+stpw.configure(bg="black")
+stpb1=Button(stpw,text="Start",font=f1,width=5,command=start)
+stpb1.place(x=100,y=100)
+stpb2=Button(stpw,text="Stop",font=f1,width=5,command=stop)
+stpb2.place(x=350,y=100)
+stpb2=Button(stpw,text="Reset",font=f1,width=5,command=reset)
+stpb2.place(x=100,y=500)
+
+
+tt = time()
+lbl=Label(stpw,text='%i:%i:%i'%(hr,mn,sec),font=f2,width=10,foreground="yellow",bg="grey")
+lbl.place(x=150,y=250)
+
+stpb=Button(stpw,text="Exit",font=f1,width=5,command=s6)
+stpb.place(x=350,y=500)
+stpw.withdraw()
+
+ctdw=Toplevel(uw)
+ctdw.geometry("600x600+550+50")
+ctdw.configure(bg="black")
+ 
+hourString=StringVar()
+minuteString=StringVar()
+secondString=StringVar()
+
+hourString.set("00")
+minuteString.set("00")
+secondString.set("00")
+
+
+hourTxt=Entry(ctdw,width=4,font=("Calibri",25,""),textvariable=hourString)
+hourTxt.place(x=170,y=180)
+minuteTxt=Entry(ctdw,width=4,font=("Calibri",25,""),textvariable=minuteString)
+minuteTxt.place(x=250,y=180)
+secondTxt=Entry(ctdw,width=4,font=("Calibri",25,""),textvariable=secondString)
+secondTxt.place(x=330,y=180)
+def runTimer() :
+	try :
+		clockTime=int(hourString.get())*3600 + int(minuteString.get())*60 + int(secondString.get())
+	except :
+		print("Incorrect values")
+	
+	while(clockTime > -1) :
+		totalMinutes,totalSeconds=divmod(clockTime, 60)
+		totalHours=0
+		if (totalMinutes > 60) :
+			totalHours, totalMinutes = divmod(totalMinutes, 60)
+		
+		hourString.set("{0:2d}".format(totalHours))
+		minuteString.set("{0:2d}".format(totalMinutes))
+		secondString.set("{0:2d}".format(totalSeconds))
+
+		ctdw.update()
+		tt.sleep(1)
+
+		if(clockTime==0) :
+			messagebox.showinfo("","Time's Up!")
+		clockTime -= 1
+ctdbtn=Button(ctdw,text="Set Time", font=f1,width=8,foreground="green",command=runTimer)
+ctdbtn.place(x=180,y=280)
+ctdbtn1=Button(ctdw,text="Exit", font=f1,foreground="red",width=5,command=s7)
+ctdbtn1.place(x=450,y=500)
+
+ctdw.withdraw()
+
+###############
+
+wcw=Toplevel(uw)
+wcw.geometry("600x600+550+50")
+wcw.configure(bg="black")
+f3=("Calibri",25,"bold")
+f4=("Times new Roman",20,"bold")
+wlbl1=Label(wcw,text="America/New_York",font=f3,width=18)
+wlbl1.place(x=40,y=20)
+wlbl11=Label(wcw,font=f4,width=32)
+wlbl11.place(x=40,y=80)
+wlbl2=Label(wcw,text="Asia/kolkata",font=f3,width=18)
+wlbl2.place(x=40,y=140)
+wlbl12=Label(wcw,font=f4,width=32)
+wlbl12.place(x=40,y=200)
+wlbl3=Label(wcw,text="Australia/Victoria",font=f3,width=18)
+wlbl3.place(x=40,y=260)
+wlbl13=Label(wcw,font=f4,width=32)
+wlbl13.place(x=40,y=320)
+wlbl4=Label(wcw,text="Africa/Timbuktu",font=f3,width=18)
+wlbl4.place(x=40,y=380)
+wlbl14=Label(wcw,font=f4,width=32)
+wlbl14.place(x=50,y=440)
+
+c1 = pytz.timezone('America/New_York')
+c2 = pytz.timezone('Asia/kolkata')
+c3 = pytz.timezone('Australia/Victoria')
+c4 = pytz.timezone('Africa/Timbuktu')
+country_time1 = datetime.now(c1)
+country_time2 = datetime.now(c2)
+country_time3 = datetime.now(c3)
+country_time4 = datetime.now(c4)
+n1=(country_time1.strftime("Date is %d-%m-%y and time is %H:%M:%S"))
+n2=(country_time2.strftime("Date is %d-%m-%y and time is %H:%M:%S"))
+n3=(country_time3.strftime("Date is %d-%m-%y and time is %H:%M:%S"))
+n4=(country_time4.strftime("Date is %d-%m-%y and time is %H:%M:%S"))
+wlbl11.config(text=n1)
+wlbl12.config(text=n2)
+wlbl13.config(text=n3)
+wlbl14.config(text=n4)
+
+wcebtn=Button(wcw,text="Exit",font=f1,foreground="red",width=5,command=s8)
+wcebtn.place(x=450,y=500)
+wcw.withdraw()
+
+time()
+uw.mainloop()
+
+
+
+
+
+
+
+
+
+
+

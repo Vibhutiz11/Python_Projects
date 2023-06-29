@@ -1,0 +1,75 @@
+#drink water reminder
+
+from tkinter import *
+import time
+from plyer import notification
+from tkinter import messagebox
+import atexit
+
+uw=Tk()
+uw.geometry("600x500+520+120")
+uw.iconphoto(False, PhotoImage(file="b1.png"))
+cg=PhotoImage(file="b3.png")
+my_label1 = Label(uw, image=cg)
+my_label1.place(x= 0, y=0, relwidth=1,relheight=1)
+uw.title("Reminder App")
+
+
+def set() :
+	get_time=minuteTxt.get()
+	
+	if get_time==""  :
+		messagebox.showerror("Alert","Please enter time to be notified")
+		minuteTxt.delete(0,END)	
+	
+	elif get_time.isalpha() :
+		messagebox.showerror("Error","Please enter time properly")
+		minuteTxt.delete(0,END)
+
+	else :
+		time1=int(float(get_time))
+		sec_min=time1 * 60
+		messagebox.showinfo("Successful","REMINDER SET")
+		minuteTxt.delete(0, END)
+		#uw.destroy()
+		uw.after(sec_min * 1000, set_notifn)
+
+
+def set_notifn() :
+		notification.notify (title="Heyy! Its time to drink water ",message="C'mon get up and get yourself some water ! Have a great day!", app_name="Reminder",app_icon="b2.ico",timeout=100)
+		
+		
+
+f1=("Arial",20,"bold")
+lbl1=Label(uw,text="Drink Water Reminder",font=f1,width=20,fg="blue")
+lbl1.place(x=145,y=90)
+
+f2=("Times New Roman",20,"bold")
+lbl2=Label(uw,text="Set Time :",font=f2,width=9,height=1)
+lbl2.place(x=130,y=170)
+
+
+
+minuteTxt=Entry(uw,width=8,font=("Calibri",25,""),bg="light grey")
+minuteTxt.place(x=200,y=250)
+time_min=Label(uw,text="Minutes",font=f2)
+time_min.place(x=350,y=260)
+
+
+btn1=Button(uw,text="SET NOTIFICATION",font=f2,fg="green",command=set)
+btn1.place(x=170,y=350)
+
+def on_closing() :
+	uw.destroy()
+
+def exit_p() :
+	uw.quit()
+
+uw.protocol("WM_DELETE_WINDOW", on_closing)
+
+atexit.register(exit_p)
+
+try:
+	uw.mainloop()
+except KeyboardInterrupt:
+	exit_p()
